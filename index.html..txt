@@ -1,0 +1,439 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HONJIN ASIA SHOP | Asian Food & Beverage</title>
+<style>
+:root {
+  --navy:#172d3b;
+  --gold:#c5a46d;
+  --cream:#f8f6f1;
+  --green:#16834a;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--cream);
+  color:#26343d;
+}
+header {
+  background:var(--navy);
+  color:white;
+  padding:24px 16px;
+  text-align:center;
+}
+header h1 {
+  margin:0;
+  letter-spacing:3px;
+  font-size:27px;
+}
+header p { color:#e2cfaa; }
+nav {
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  padding:14px;
+  background:white;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+button,select,input { font:inherit; }
+button {
+  cursor:pointer;
+  border:0;
+  border-radius:8px;
+  padding:10px 14px;
+}
+nav button {
+  background:var(--navy);
+  color:white;
+}
+.container {
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+.hero {
+  background:var(--navy);
+  color:white;
+  padding:40px 20px;
+  border-radius:14px;
+  text-align:center;
+  margin-bottom:25px;
+}
+.hero h2 { font-size:28px; }
+.hero p { color:#e2cfaa; }
+.controls {
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+.controls input,.controls select {
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  min-width:0;
+  flex:1;
+}
+.products {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+.product {
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 3px 12px #0000000c;
+}
+.product img {
+  width:100%;
+  height:175px;
+  object-fit:cover;
+  background:#eee;
+}
+.product-info { padding:14px; }
+.product h3 { margin:0 0 8px; }
+.price {
+  color:var(--green);
+  font-size:19px;
+  font-weight:bold;
+}
+.add {
+  width:100%;
+  background:var(--navy);
+  color:white;
+  margin-top:12px;
+}
+.cart {
+  margin-top:30px;
+  background:white;
+  padding:20px;
+  border-radius:12px;
+}
+.cart-item {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid #eee;
+  padding:12px 0;
+}
+.qty button {
+  background:#eee;
+  padding:5px 10px;
+}
+.checkout {
+  background:var(--green);
+  color:white;
+  width:100%;
+  padding:15px;
+  margin-top:15px;
+  font-weight:bold;
+}
+footer {
+  background:var(--navy);
+  color:white;
+  text-align:center;
+  padding:25px;
+  margin-top:40px;
+}
+@media(max-width:700px) {
+  .products { grid-template-columns:repeat(2,1fr); }
+  .product img { height:135px; }
+  .controls { flex-direction:column; }
+  header h1 { font-size:22px; }
+}
+@media(max-width:400px) {
+  .products { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>HONJIN ASIA SHOP</h1>
+  <p>アジア食品・飲料専門店</p>
+  <small>Asian Food & Beverage</small>
+</header>
+
+<nav>
+  <button onclick="setLang('id')">ID</button>
+  <button onclick="setLang('ja')">日本語</button>
+  <button onclick="setLang('en')">EN</button>
+</nav>
+
+<main class="container">
+
+  <section class="hero">
+    <h2 id="heroTitle">Selamat Datang!</h2>
+    <p id="heroDesc">
+      Temukan makanan dan minuman favorit Asia di sini.
+    </p>
+  </section>
+
+  <h2 id="catalogTitle">Daftar Produk</h2>
+
+  <div class="controls">
+    <input id="search" placeholder="Cari produk..." oninput="render()">
+    <select id="category" onchange="render()">
+      <option value="all">Semua kategori</option>
+      <option value="Makanan">Makanan</option>
+      <option value="Minuman">Minuman</option>
+      <option value="Snack">Snack</option>
+      <option value="Bumbu">Bumbu</option>
+    </select>
+  </div>
+
+  <section class="products" id="products"></section>
+
+  <section class="cart">
+    <h2 id="cartTitle">Keranjang Belanja</h2>
+    <div id="cartItems">Keranjang masih kosong.</div>
+    <h3 id="total">Total: ¥0</h3>
+
+    <hr>
+
+    <h3 id="customerTitle">Informasi Pemesan</h3>
+    <input id="customer" placeholder="Nama lengkap"
+      style="width:100%;padding:12px;margin:5px 0">
+    <input id="phone" placeholder="Nomor telepon"
+      style="width:100%;padding:12px;margin:5px 0">
+    <textarea id="address" placeholder="Alamat pengiriman (jika delivery)"
+      style="width:100%;padding:12px;margin:5px 0;min-height:70px"></textarea>
+
+    <select id="delivery"
+      style="width:100%;padding:12px;margin:5px 0">
+      <option value="Delivery">Pengiriman ke alamat</option>
+      <option value="Pickup">Ambil sendiri di toko</option>
+    </select>
+
+    <textarea id="note" placeholder="Catatan pesanan (opsional)"
+      style="width:100%;padding:12px;margin:5px 0"></textarea>
+
+    <button class="checkout" onclick="orderWhatsApp()">
+      ORDER VIA WHATSAPP
+    </button>
+  </section>
+
+</main>
+
+<footer>
+  <h3>HONJIN ASIA SHOP</h3>
+  <p>Thank you for shopping with us!</p>
+  <small>© 2026 HONJIN ASIA SHOP</small>
+</footer>
+
+<script>
+const whatsapp = "819065773726";
+
+const translations = {
+ id:{
+  hero:"Selamat Datang!",
+  desc:"Temukan makanan dan minuman favorit Asia di sini.",
+  catalog:"Daftar Produk",
+  cart:"Keranjang Belanja",
+  empty:"Keranjang masih kosong.",
+  customer:"Informasi Pemesan",
+  search:"Cari produk...",
+  all:"Semua kategori"
+ },
+ ja:{
+  hero:"ようこそ！",
+  desc:"アジアのおいしい食品と飲み物を見つけましょう。",
+  catalog:"商品一覧",
+  cart:"ショッピングカート",
+  empty:"カートは空です。",
+  customer:"お客様情報",
+  search:"商品を検索...",
+  all:"すべて"
+ },
+ en:{
+  hero:"Welcome!",
+  desc:"Discover your favorite Asian food and beverages.",
+  catalog:"Our Products",
+  cart:"Shopping Cart",
+  empty:"Your cart is empty.",
+  customer:"Customer Information",
+  search:"Search products...",
+  all:"All categories"
+ }
+};
+
+let lang = "id";
+
+// Tambahkan produk asli di bagian ini.
+// Ganti foto dengan nama file gambar produk.
+const products = [
+ {
+  id:1,name:"Contoh Mie Instan",
+  category:"Makanan",price:150,
+  image:"images/product1.jpg",
+  description:"Makanan instan Asia"
+ },
+ {
+  id:2,name:"Contoh Snack Asia",
+  category:"Snack",price:200,
+  image:"images/product2.jpg",
+  description:"Snack pilihan"
+ },
+ {
+  id:3,name:"Contoh Minuman",
+  category:"Minuman",price:180,
+  image:"images/product3.jpg",
+  description:"Minuman segar"
+ },
+ {
+  id:4,name:"Contoh Bumbu Masak",
+  category:"Bumbu",price:350,
+  image:"images/product4.jpg",
+  description:"Bumbu masakan Asia"
+ }
+];
+
+let cart = {};
+
+function money(n) {
+ return "¥" + n.toLocaleString("ja-JP");
+}
+
+function setLang(l) {
+ lang = l;
+ const t = translations[l];
+ document.getElementById("heroTitle").textContent=t.hero;
+ document.getElementById("heroDesc").textContent=t.desc;
+ document.getElementById("catalogTitle").textContent=t.catalog;
+ document.getElementById("cartTitle").textContent=t.cart;
+ document.getElementById("customerTitle").textContent=t.customer;
+ document.getElementById("search").placeholder=t.search;
+ document.querySelector("#category option[value='all']")
+   .textContent=t.all;
+ render();
+}
+
+function render() {
+ const q=document.getElementById("search").value.toLowerCase();
+ const cat=document.getElementById("category").value;
+
+ const list=products.filter(p=>
+  p.name.toLowerCase().includes(q) &&
+  (cat==="all" || p.category===cat)
+ );
+
+ document.getElementById("products").innerHTML=
+ list.map(p=>`
+  <article class="product">
+   <img src="${p.image}" alt="${p.name}"
+    onerror="this.style.display='none'">
+   <div class="product-info">
+    <h3>${p.name}</h3>
+    <small>${p.description}</small>
+    <p class="price">${money(p.price)}</p>
+    <button class="add" onclick="add(${p.id})">
+      + Tambah ke Keranjang
+    </button>
+   </div>
+  </article>
+ `).join("");
+
+ renderCart();
+}
+
+function add(id) {
+ cart[id]=(cart[id]||0)+1;
+ renderCart();
+}
+
+function changeQty(id,n) {
+ cart[id]=(cart[id]||0)+n;
+ if(cart[id]<=0) delete cart[id];
+ renderCart();
+}
+
+function renderCart() {
+ const items=Object.entries(cart);
+ const box=document.getElementById("cartItems");
+
+ if(!items.length) {
+  box.textContent=translations[lang].empty;
+ } else {
+  box.innerHTML=items.map(([id,qty])=>{
+   const p=products.find(x=>x.id==id);
+   return `
+    <div class="cart-item">
+     <div>${p.name}<br>
+     <small>${money(p.price)} × ${qty}</small></div>
+     <div class="qty">
+      <button onclick="changeQty(${id},-1)">−</button>
+      ${qty}
+      <button onclick="changeQty(${id},1)">+</button>
+     </div>
+    </div>`;
+  }).join("");
+ }
+
+ const total=items.reduce((sum,[id,qty])=>
+  sum+products.find(p=>p.id==id).price*qty,0);
+
+ document.getElementById("total").textContent=
+  "Total: "+money(total);
+}
+
+function orderWhatsApp() {
+ const items=Object.entries(cart);
+
+ if(!items.length) {
+  alert("Silakan pilih produk terlebih dahulu.");
+  return;
+ }
+
+ const name=document.getElementById("customer").value.trim();
+ const phone=document.getElementById("phone").value.trim();
+ const address=document.getElementById("address").value.trim();
+ const delivery=document.getElementById("delivery").value;
+ const note=document.getElementById("note").value.trim();
+
+ if(!name) {
+  alert("Masukkan nama pelanggan.");
+  return;
+ }
+
+ if(delivery==="Delivery" && !address) {
+  alert("Masukkan alamat pengiriman.");
+  return;
+ }
+
+ let total=0;
+ let message="HONJIN ASIA SHOP\n";
+ message+="Pesanan Baru / 新規注文\n\n";
+ message+="Nama: "+name+"\n";
+ message+="Telepon: "+phone+"\n\n";
+ message+="DAFTAR PESANAN:\n";
+
+ items.forEach(([id,qty])=>{
+  const p=products.find(x=>x.id==id);
+  const subtotal=p.price*qty;
+  total+=subtotal;
+  message+=p.name+" x "+qty+" = "+money(subtotal)+"\n";
+ });
+
+ message+="\nTotal: "+money(total);
+ message+="\nMetode: "+delivery;
+ if(address) message+="\nAlamat: "+address;
+ if(note) message+="\nCatatan: "+note;
+ message+="\n\nMohon konfirmasi pesanan saya. Terima kasih.";
+
+ const url="https://wa.me/"+whatsapp+
+  "?text="+encodeURIComponent(message);
+
+ window.open(url,"_blank");
+}
+
+render();
+</script>
+
+</body>
+</html>
