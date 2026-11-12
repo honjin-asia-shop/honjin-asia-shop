@@ -92,9 +92,10 @@ nav button {
 }
 .product img {
   width:100%;
-  height:175px;
-  object-fit:cover;
-  background:#eee;
+  height:150px;
+  object-fit:contain;
+  background:#fff;
+  padding:5px;
 }
 .product-info { padding:14px; }
 .product h3 { margin:0 0 8px; }
@@ -134,6 +135,17 @@ nav button {
   margin-top:15px;
   font-weight:bold;
 }
+.messenger-button {
+  display:block;
+  background:#0866FF;
+  color:white;
+  text-align:center;
+  text-decoration:none;
+  border-radius:8px;
+  padding:15px;
+  margin-top:12px;
+  font-weight:bold;
+}
 footer {
   background:var(--navy);
   color:white;
@@ -164,6 +176,7 @@ footer {
   <button onclick="setLang('id')">ID</button>
   <button onclick="setLang('ja')">日本語</button>
   <button onclick="setLang('en')">EN</button>
+  <button onclick="setLang('my')">မြန်မာ</button>
 </nav>
 
 <main class="container">
@@ -217,6 +230,14 @@ footer {
     <button class="checkout" onclick="orderWhatsApp()">
       ORDER VIA WHATSAPP
     </button>
+    
+    <a
+      href="https://m.me/USERNAME"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="messenger-button">
+      CHAT VIA FACEBOOK MESSENGER
+    </a>
   </section>
 
 </main>
@@ -260,7 +281,17 @@ const translations = {
   customer:"Customer Information",
   search:"Search products...",
   all:"All categories"
- }
+ },
+ my:{
+  hero:"ကြိုဆိုပါတယ်!",
+  desc:"အာရှရဲ့ အရသာရှိတဲ့ အစားအစာများနှင့် ဖျော်ရည်များကို ဒီမှာ ရှာဖွေလိုက်ပါ။",
+  catalog:"ကုန်ပစ္စည်းစာရင်း",
+  cart:"ဈေးဝယ်ခြင်းတောင်း",
+  empty:"ဈေးဝယ်ခြင်းတောင်းထဲတွင် ဘာမှမရှိသေးပါ။",
+  customer:"ဝယ်ယူသူအချက်အလက်",
+  search:"ကုန်ပစ္စည်းရှာရန်...",
+  all:"အားလုံး"
+}
 };
 
 let lang = "id";
@@ -268,32 +299,63 @@ let lang = "id";
 // Tambahkan produk asli di bagian ini.
 // Ganti foto dengan nama file gambar produk.
 const products = [
- {
-  id:1,name:"Contoh Mie Instan",
-  category:"Makanan",price:150,
-  image:"images/product1.jpg",
-  description:"Makanan instan Asia"
- },
- {
-  id:2,name:"Contoh Snack Asia",
-  category:"Snack",price:200,
-  image:"images/product2.jpg",
-  description:"Snack pilihan"
- },
- {
-  id:3,name:"Contoh Minuman",
-  category:"Minuman",price:180,
-  image:"images/product3.jpg",
-  description:"Minuman segar"
- },
- {
-  id:4,name:"Contoh Bumbu Masak",
-  category:"Bumbu",price:350,
-  image:"images/product4.jpg",
-  description:"Bumbu masakan Asia"
- }
+  {
+    id: 1,
+    name: "Indomie Mie Instan",
+    category: "Makanan",
+    price: 150,
+    image: "images/product1.jpg",
+    description: "Makanan instan Asia"
+  },
+  {
+    id: 2,
+    name: "Contoh Snack Asia",
+    category: "Snack",
+    price: 200,
+    image: "images/product2.jpg",
+    description: "Snack pilihan"
+  },
+  {
+    id: 3,
+    name: "Teh Botol Sosro",
+    category: "Minuman",
+    price: 180,
+    image: "images/product3.jpg",
+    description: "Minuman segar"
+  },
+  {
+    id: 4,
+    name: "Contoh Bumbu Masak",
+    category: "Bumbu",
+    price: 350,
+    image: "images/product4.jpg",
+    description: "Bumbu masakan Asia"
+  },
+  {
+    id: 5,
+    name: "お茶の若葉・茶葉の新芽（400ｇ）",
+    category: "Bumbu",
+    price: 350,
+    image: "images/product5.jpg",
+    description: "မတုတ်မ ရှယ်လက်ဖက်ညွန့်"
+  },
+  {
+    id: 6,
+    name: "ゼヤン茶葉の新芽の和え物（甘口・辛口）",
+    category: "Bumbu",
+    price: 350,
+    image: "images/product6.jpg",
+    description: "ဦးကာက ဇယန်းလက်ဖက်အညွန့်နှပ်(အချို၊အစပ်)"
+  },
+  {
+    id: 7,
+    name: "揚げ豆とナッツのミックス",
+    category: "Bumbu",
+    price: 350,
+    image: "images/product7.jpg",
+    description: "မတုတ်မ ရှယ်ခုနှစ်ထွေကြော်"
+  }
 ];
-
 let cart = {};
 
 function money(n) {
@@ -333,7 +395,7 @@ function render() {
     <small>${p.description}</small>
     <p class="price">${money(p.price)}</p>
     <button class="add" onclick="add(${p.id})">
-      + Tambah ke Keranjang
+      +Add to Cart
     </button>
    </div>
   </article>
